@@ -39,3 +39,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Veracode Container/IaC/Secrets action step
+        uses: veracode/container_iac_secrets_scanning@v1.0.6
+        with:
+          vid: ${{ secrets.VID }}
+          vkey: ${{ secrets.VKEY }}
+          command: "scan" 
+          type: "image"
+          source: "${{ github.repository }}"
+          format: "table"
+          debug: false
+          fail_build: true
