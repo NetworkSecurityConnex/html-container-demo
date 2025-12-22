@@ -48,7 +48,7 @@ jobs:
           vkey: ${{ secrets.VKEY }}
           command: "scan" 
           type: "image"
-          source: "${{ github.repository }}"
+          source: "${{ github.repository }}:${{ steps.meta.outputs.tags }}"
           format: "table"
           debug: false
           fail_build: true
