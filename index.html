@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerable Container App</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #f0f0f0; }
+        .container { background: white; padding: 2rem; border-radius: 10px; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #c0392b; } /* Red color to indicate danger/vulnerability */
+        input { padding: 10px; width: 200px; }
+        button { padding: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vulnerable App (DOM XSS) 💀</h1>
+        <p>Enter your name below to generate a welcome message:</p>
+        
+        <input type="text" id="nameInput" placeholder="Enter name here...">
+        <button onclick="updateUrl()">Submit</button>
+
+        <hr>
+        
+        <div id="welcome-message"></div>
+    </div>
+
+    <script>
+        // 1. Read the 'name' parameter from the URL
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name');
+
+        if (name) {
+            // 2. THE VULNERABILITY:
+            // Using .innerHTML allows the browser to interpret HTML tags (including <script> or <img onerror...>)
+            // A secure app would use .innerText or .textContent here.
+            document.getElementById('welcome-message').innerHTML = "Welcome, " + name + "!";
+        }
+
+        function updateUrl() {
+            const inputVal = document.getElementById('nameInput').value;
+            window.location.search = '?name=' + inputVal;
+        }
+    </script>
+</body>
+</html>
